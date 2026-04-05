@@ -184,3 +184,32 @@ From the matmul optimization team:
 - Key ML feature: GPU Neural Accelerators (40 matrix-multiply units in GPU cores, Metal 4 TensorOps)
 - Expected bandwidth: ~600-650 GB/s (LPDDR5X-9600)
 - Does NOT fundamentally change the story — bandwidth wall remains, just shifted 10-15%
+
+## CORRECTION: Entropy Coding Debunked (2026-04-05)
+
+**Empirically measured on 1.4 billion 4-bit values from Qwen3.5-27B-4bit:**
+
+```
+Shannon entropy: 3.72 bits (NOT 1.1 bits as claimed by ECQ/EntroLLM)
+Compression ratio: 1.08x (NOT 3.3x)
+Savings: 7% (13.7 GB → 12.7 GB)
+```
+
+The distribution is a bell curve centered on 8 (mid-range 0-15). Standard affine 4-bit quantization (scale * int + bias) produces near-uniform distributions. The 1.1-bit entropy from ECQ was measured on a DIFFERENT quantization format with learned codebooks that deliberately cluster values.
+
+rANS on standard 4-bit saves 7%. Not worth a custom Metal kernel.
+
+To get real entropy gains, you'd need to replace the entire quantization stack with a compression-aware quantizer (ECQ, EntQuant). That's a different project.
+
+## CONFIRMED: MTP Head on ANE (2026-04-05)
+
+CoreML conversion of the MTP head succeeded:
+- 424.7M params, 849.5 MB in mlpackage
+- **2.24 ms median latency** on ANE
+- Exact output match with MLX version
+- ANE has separate memory bus — zero GPU bandwidth interference
+- Runs entirely within the 34ms GPU forward pass window
+
+Files: ~/models/mtp-head-ane.mlpackage, ~/optimizations/qwen-mtp-inference/ane-mtp/
+
+This enables the voting scheme: two ANE MTP predictions (~4ms total) for free while GPU runs the main forward. When both agree (64% of the time), skip the 38ms verification.
