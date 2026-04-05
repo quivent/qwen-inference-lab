@@ -104,3 +104,37 @@ The 2.4ms difference between sync and async modes (36.2 vs 33.8 ms/tok) represen
 3. **The metadata tax is real but tolerable.** 11.1% of bandwidth goes to reading quantization scales/biases. group_size=128 halves this but the quality cost is too high. group_size=64 is the right trade-off.
 
 4. **Memory bandwidth is the fundamental constraint.** The M4 Max reads 13.7 GB per token. At 546 GB/s, that's 25.1ms minimum. No amount of software optimization can beat this without reducing the amount of data read (smaller model, more aggressive quantization, or pruning).
+
+## Dispatch Barrier Profiling (2026-04-05)
+
+### The 9.4ms Non-Weight Overhead
+
+```
+Theoretical bandwidth:   25.1 ms (13.7 GB at 546 GB/s)
+Matmul chain (pipelined): 22.4 ms (below theoretical — some weights cached)
+Matmul + norm chain:     31.0 ms (+8.6 ms from norm dispatch barriers)
+Full model:              36.1 ms (+5.1 ms from GDN, activations, reshapes)
+```
+
+### Key Discovery: Barriers Between Matmuls
+
+Individual norm dispatch overhead: ~5us (measured in isolation)
+Pipelined norm overhead: 8.6ms across 256 norm+matmul pairs
+
+The 170x amplification (5us × 256 = 1.3ms vs 8.6ms measured) occurs because:
+- In isolation: GPU pipeline is empty, norm executes instantly
+- In pipeline: norm sits between two matmuls in the critical path
+- The GPU stalls ~33us per barrier waiting for L2 coherency between norm output and matmul input
+
+### Fused rms_norm + quantized_matmul
+
+Two-pass approach within a single kernel:
+1. Pass 1: compute sum(x²) for RMS (x in L2, ~0.01ms)
+2. Pass 2: load x * norm_weight * rms_inv, then qdot with quantized weights
+
+Results (via mx.fast.metal_kernel, 256 matmuls):
+- Separate: 30.9 ms
+- Fused: 28.9 ms
+- **Saved: 2.0 ms (6.6%)**
+
+Full MLX integration (modifying qmv_fast in metallib) expected to save more.
