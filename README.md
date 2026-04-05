@@ -1,6 +1,6 @@
 # qwen-inference-lab
 
-Exploration log: optimizing Qwen3.5-27B inference on Apple Silicon (M4 Max, 96 GB, 546 GB/s memory bandwidth).
+Exploration log: optimizing Qwen3.5-27B inference on Apple Silicon (M4 Max, 128 GB, 546 GB/s memory bandwidth).
 
 ## Goal
 
@@ -48,7 +48,7 @@ Ending point: **42.7 tok/s** (MTP with zero-cost DeltaNet rollback).
 
 ## Hardware
 
-- Apple M4 Max (16-core GPU, 96 GB unified memory)
+- Apple M4 Max (16-core GPU, 128 GB unified memory)
 - Theoretical peak bandwidth: 546 GB/s
 - Model: Qwen3.5-27B-4bit (13.7 GB total weights)
 - Theoretical minimum: 25.1 ms/tok (39.8 tok/s at 100% BW utilization)
