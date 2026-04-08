@@ -14,18 +14,23 @@ Push Qwen3.5-27B token generation as fast as possible on a single M4 Max, starti
 | V5 monolithic compile | 30.0 | 1.02x |
 | Stock + spec decode (0.8B draft) | 37.6 | 1.27x |
 | MTP head (self-speculative) | 36.9 | 1.25x |
-| MTP + split-recurrence rollback | **42.7** | **1.45x** |
+| MTP + split-recurrence rollback | 42.7 | 1.45x |
+| Adaptive MTP chain (Huihui abliterated, 2026-04-08) | 49.5 | 1.68x |
+| Adaptive MTP chain (vanilla, revalidated 2026-04-08) | **51.1** | **1.73x** |
 
 Starting point: **29.5 tok/s** (stock mlx_lm, async eval).
-Ending point: **42.7 tok/s** (MTP with zero-cost DeltaNet rollback).
+Current best: **51.1 tok/s** (adaptive MTP confidence chain + batch verify, from sibling `parallel-mtp-voting` project).
 
 ## What's in here
 
 - `docs/TIMELINE.md` -- Every approach tried, in order, with results and reasoning
 - `docs/BANDWIDTH_ANALYSIS.md` -- Profiling work: where the time actually goes
+- `docs/HUIHUI_ABLITERATED.md` -- Uncensored variant: MLX conversion, MTP extraction, 3% perf cost, ThreadLocalStream fix
 - `kernels/fused_gdn.py` -- The fused kernel code (V2-V7, MTP head, split-recurrence)
 - `benchmarks/bench_v7.py` -- Speculative decoding benchmark harness
+- `benchmarks/extract_mtp_huihui.py` -- Parametrized MTP head extractor (works against any Qwen3.5-27B fp16 HF repo)
 - `logs/llama_cpp_server.log` -- Server output showing MTP+draft performance
+- `logs/adaptive_mtp_{vanilla,huihui}.log` -- Raw 2026-04-08 revalidation runs
 
 ## The journey, briefly
 

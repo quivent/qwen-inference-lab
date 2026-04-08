@@ -1,0 +1,51 @@
+[load] mlx-community/Qwen3.5-27B-4bit
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 326502.71it/s]
+mx.metal.clear_cache is deprecated and will be removed in a future version. Use mx.clear_cache instead.
+[load] done in 3.6s
+Patched 48 GatedDeltaNet layers (fused projections + Metal kernels)
+Loading MTP weights from /Users/joshkornreich/mlx-fork/mtp_weights.safetensors...
+MTP head loaded: 265.5 MB, 31 tensors
+[config] threshold=0.8 max_chain=2 max_tokens=128
+[prompt] Explain in detail how a transformer language model generates...
+
+===== WARMUP =====
+Prefill: 36 tokens, 296ms
+Generate: 128 tokens, 2526ms (50.7 tok/s)
+Draft accepted: 43, rejected: 28, bonus: 56
+Rollbacks: 0/56
+Avg chain: 1.27, Avg accepted: 1.27
+Tokens per step: 2.29
+Threshold: 0.8, Max chain: 2
+
+===== RUN 1/3 =====
+Prefill: 36 tokens, 286ms
+Generate: 128 tokens, 2505ms (51.1 tok/s)
+Draft accepted: 43, rejected: 28, bonus: 56
+Rollbacks: 0/56
+Avg chain: 1.27, Avg accepted: 1.27
+Tokens per step: 2.29
+Threshold: 0.8, Max chain: 2
+[run 1] wall=2791ms (includes prefill)
+
+===== RUN 2/3 =====
+Prefill: 36 tokens, 286ms
+Generate: 128 tokens, 2500ms (51.2 tok/s)
+Draft accepted: 43, rejected: 28, bonus: 56
+Rollbacks: 0/56
+Avg chain: 1.27, Avg accepted: 1.27
+Tokens per step: 2.29
+Threshold: 0.8, Max chain: 2
+[run 2] wall=2786ms (includes prefill)
+
+===== RUN 3/3 =====
+Prefill: 36 tokens, 286ms
+Generate: 128 tokens, 2504ms (51.1 tok/s)
+Draft accepted: 43, rejected: 28, bonus: 56
+Rollbacks: 0/56
+Avg chain: 1.27, Avg accepted: 1.27
+Tokens per step: 2.29
+Threshold: 0.8, Max chain: 2
+[run 3] wall=2790ms (includes prefill)
+
+===== DONE =====
+Parse adaptive_mtp's per-run 'Generate:' lines above for decode-only tok/s.

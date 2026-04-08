@@ -1,0 +1,50 @@
+mx.metal.clear_cache is deprecated and will be removed in a future version. Use mx.clear_cache instead.
+[load] /Users/joshkornreich/models/Huihui-Qwen3.5-27B-abliterated-mlx-4bit
+[load] done in 3.1s
+Patched 48 GatedDeltaNet layers (fused projections + Metal kernels)
+Loading MTP weights from /Users/joshkornreich/mlx-fork/mtp_weights.safetensors...
+MTP head loaded: 265.5 MB, 31 tensors
+[config] threshold=0.8 max_chain=2 max_tokens=128
+[prompt] Explain in detail how a transformer language model generates...
+
+===== WARMUP =====
+Prefill: 36 tokens, 301ms
+Generate: 128 tokens, 2592ms (49.4 tok/s)
+Draft accepted: 43, rejected: 25, bonus: 59
+Rollbacks: 1/59
+Avg chain: 1.17, Avg accepted: 1.15
+Tokens per step: 2.17
+Threshold: 0.8, Max chain: 2
+
+===== RUN 1/3 =====
+Prefill: 36 tokens, 285ms
+Generate: 128 tokens, 2582ms (49.6 tok/s)
+Draft accepted: 43, rejected: 25, bonus: 59
+Rollbacks: 1/59
+Avg chain: 1.17, Avg accepted: 1.15
+Tokens per step: 2.17
+Threshold: 0.8, Max chain: 2
+[run 1] wall=2868ms (includes prefill)
+
+===== RUN 2/3 =====
+Prefill: 36 tokens, 286ms
+Generate: 128 tokens, 2574ms (49.7 tok/s)
+Draft accepted: 43, rejected: 25, bonus: 59
+Rollbacks: 1/59
+Avg chain: 1.17, Avg accepted: 1.15
+Tokens per step: 2.17
+Threshold: 0.8, Max chain: 2
+[run 2] wall=2861ms (includes prefill)
+
+===== RUN 3/3 =====
+Prefill: 36 tokens, 287ms
+Generate: 128 tokens, 2588ms (49.5 tok/s)
+Draft accepted: 43, rejected: 25, bonus: 59
+Rollbacks: 1/59
+Avg chain: 1.17, Avg accepted: 1.15
+Tokens per step: 2.17
+Threshold: 0.8, Max chain: 2
+[run 3] wall=2875ms (includes prefill)
+
+===== DONE =====
+Parse adaptive_mtp's per-run 'Generate:' lines above for decode-only tok/s.
